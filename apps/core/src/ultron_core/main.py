@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from .api.chat import chat_router
 
 app = FastAPI(
     title="ULTRON Core",
@@ -23,3 +24,5 @@ async def health():
         "status": "ok",
         "service": "ultron-core",
     }
+
+app.include_router(chat_router)
