@@ -10,38 +10,40 @@ function App() {
   const [isSending, setIsSending] = useState<boolean>(false);
 
   async function sendMessage(message: string) {
-    let messageAux = message.trim();
-    messageAux = messageAux.replace(/\s+/g, " ");
+    let messageAux = message.replace(/\s+/g, " ");
+    messageAux = messageAux.trim();
 
-    try {
-      setIsSending(true);
-      const bodyRequest = JSON.stringify({ message: messageAux });
+    if (!isSending && messageAux !== "") {
+      try {
+        setIsSending(true);
+        const bodyRequest = JSON.stringify({ message: messageAux });
 
-      const response = await fetch("http://127.0.0.1:8000/chat", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: bodyRequest,
-      });
+        const response = await fetch("http://127.0.0.1:8000/chat", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: bodyRequest,
+        });
 
-      if (!response.ok) {
-        const answer = `Infelizmente não consegui processar...`;
-        setUltronResponse(answer);
+        if (!response.ok) {
+          const answer = `Infelizmente não consegui processar...`;
+          setUltronResponse(answer);
+          setTextInput("");
+
+          return;
+        }
+        const data = await response.json();
+
+        setUltronResponse(data["message"]);
         setTextInput("");
-
-        return;
+      } catch {
+        setUltronResponse("Infelizmente não consegui processar...");
+        setTextInput("");
+        setCoreStatus("offline");
+      } finally {
+        setIsSending(false);
       }
-      const data = await response.json();
-
-      setUltronResponse(data["message"]);
-      setTextInput("");
-    } catch {
-      setUltronResponse("Infelizmente não consegui processar...");
-      setTextInput("");
-      setCoreStatus("offline");
-    } finally {
-      setIsSending(false);
     }
   }
 
@@ -51,7 +53,7 @@ function App() {
         const response = await fetch("http://127.0.0.1:8000/health");
 
         if (!response.ok) {
-          throw new Error("Core unvaliable");
+          throw new Error("Core unavailable");
         }
 
         const data = await response.json();
@@ -95,13 +97,16 @@ function App() {
               name="textInput"
               value={textInput}
               onKeyDown={(event) => {
-                if (event.key === "Enter") {
-                  sendMessage(textInput);
+                if (!isSending && textInput.trim() !== "") {
+                  if (event.key === "Enter") {
+                    sendMessage(textInput);
+                  }
                 }
               }}
               onChange={(event) => {
                 setTextInput(event.target.value);
               }}
+              disabled={isSending}
             />
             &nbsp;
             <button
@@ -109,7 +114,7 @@ function App() {
               onClick={() => {
                 sendMessage(textInput);
               }}
-              disabled={isSending || textInput.trim() == ""}
+              disabled={isSending || textInput.trim() === ""}
             >
               Enviar
             </button>
