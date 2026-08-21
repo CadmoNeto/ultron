@@ -77,20 +77,98 @@ function App() {
   }, []);
 
   return (
-    <main>
-      <img
-        width={"150px"}
-        height={"150px"}
-        alt=""
-        src={ultronIcon}
-        style={{ filter: "brightness(0) invert(1)" }}
-      />
-      <h1>ULTRON</h1>
+    <main
+      style={{
+        minHeight: "100vh",
+        display: "grid",
+        gridTemplateColumns: "1fr 3fr 1fr",
+        gap: "12px",
+        padding: "12px",
+        boxSizing: "border-box",
+        background:
+          "radial-gradient(circle,rgba(87, 109, 122, 1) 0%, rgba(11, 50, 66, 1) 84%)",
+      }}
+    >
+      <div
+        style={{
+          padding: "1%",
+          color: "#FFF",
+          border: "1px solid rgba(64, 142, 173, 1)",
+          borderRadius: "20px",
+          background:
+            "radial-gradient(circle,rgba(64, 142, 173, 1) 0%, rgba(24, 71, 89, 1) 84%)",
+        }}
+      >
+        texto
+        <br />
+        texto
+        <br />
+        texto
+        <br />
+        texto
+        <br />
+        texto
+        <br />
+        texto
+        <br />
+        texto
+        <br />
+      </div>
+      <div
+        style={{
+          position: "relative",
+          padding: "1%",
+          margin: "0 1%",
+          border: "1px solid rgba(64, 142, 173, 1)",
+          borderRadius: "20px",
+          background:
+            "radial-gradient(circle,rgba(64, 142, 173, 1) 0%, rgba(24, 71, 89, 1) 84%)",
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
+          <img width={"150px"} height={"150px"} alt="" src={ultronIcon} />
+        </div>
+        <div
+          style={{
+            position: "absolute",
+            top: "16px",
+            right: "20px",
+            display: "flex",
+            alignItems: "center",
+            gap: "6px",
+            fontSize: "14px",
+          }}
+        >
+          {coreStatus === "checking" && (
+            <>
+              <span>🟡</span>
+              <span style={{ color: "#FFD166" }}>❯ CHECKING</span>
+            </>
+          )}
+          {coreStatus === "offline" && (
+            <>
+              <span>🔴</span>
+              <span style={{ color: "#DD2E44" }}>❯ OFFLINE</span>
+            </>
+          )}
 
-      {coreStatus === "checking" && <p>Checking Core...</p>}
-      {coreStatus === "online" && (
-        <>
-          <p>🟢 CORE ONLINE</p>
+          {coreStatus === "online" && (
+            <>
+              <span>🟢</span>
+              <span style={{ color: "#78B159" }}>❯ ONLINE</span>
+            </>
+          )}
+        </div>
+
+        <h1 style={{ color: "#FFF" }}>ULTRON</h1>
+
+        {coreStatus === "checking" && <p>Checking Core...</p>}
+        {coreStatus === "online" && (
           <div>
             <input
               placeholder="Escreva aqui..."
@@ -119,10 +197,34 @@ function App() {
               Enviar
             </button>
           </div>
-        </>
-      )}
-      {coreStatus === "offline" && <p>🔴 CORE OFFLINE</p>}
-      <p>{ultronResponse}</p>
+        )}
+        <p>{ultronResponse}</p>
+      </div>
+      <div
+        style={{
+          padding: "1%",
+          color: "#FFF",
+          border: "1px solid rgba(64, 142, 173, 1)",
+          borderRadius: "20px",
+          background:
+            "radial-gradient(circle,rgba(64, 142, 173, 1) 0%, rgba(24, 71, 89, 1) 84%)",
+        }}
+      >
+        texto
+        <br />
+        texto
+        <br />
+        texto
+        <br />
+        texto
+        <br />
+        texto
+        <br />
+        texto
+        <br />
+        texto
+        <br />
+      </div>
     </main>
   );
 }
