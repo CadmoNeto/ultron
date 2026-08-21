@@ -7,16 +7,14 @@ function App() {
   const [coreStatus, setCoreStatus] = useState<CoreStatus>("checking");
   const [textInput, setTextInput] = useState<string>("");
   const [ultronResponse, setUltronResponse] = useState<string>("");
+  const [isSending, setIsSending] = useState<boolean>(false);
 
   async function sendMessage(message: string) {
     let messageAux = message.trim();
-    if (messageAux.includes("  ")) {
-      while (messageAux.includes("  ")) {
-        messageAux = messageAux.replaceAll("  ", " ");
-      }
-    }
+    messageAux = messageAux.replace(/\s+/g, " ");
 
     try {
+      setIsSending(true);
       const bodyRequest = JSON.stringify({ message: messageAux });
 
       const response = await fetch("http://127.0.0.1:8000/chat", {
@@ -42,6 +40,8 @@ function App() {
       setUltronResponse("Infelizmente não consegui processar...");
       setTextInput("");
       setCoreStatus("offline");
+    } finally {
+      setIsSending(false);
     }
   }
 
@@ -94,15 +94,22 @@ function App() {
               placeholder="Escreva aqui..."
               name="textInput"
               value={textInput}
+              onKeyDown={(event) => {
+                if (event.key === "Enter") {
+                  sendMessage(textInput);
+                }
+              }}
               onChange={(event) => {
                 setTextInput(event.target.value);
               }}
             />
+            &nbsp;
             <button
               type="button"
               onClick={() => {
                 sendMessage(textInput);
               }}
+              disabled={isSending || textInput.trim() == ""}
             >
               Enviar
             </button>
