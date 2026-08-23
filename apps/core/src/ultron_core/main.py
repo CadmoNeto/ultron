@@ -28,5 +28,5 @@ async def health():
         "service": "ultron-core",
     }
 
-chat_router = create_chat_router(fakellm)
+chat_router = create_chat_router(llm)
 app.include_router(chat_router)
