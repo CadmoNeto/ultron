@@ -1,6 +1,9 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from .api.chat import chat_router
+from .api.chat import create_chat_router
+from .llm.fake import FakeLLM
+
+llm = FakeLLM()
 
 app = FastAPI(
     title="ULTRON Core",
@@ -25,4 +28,5 @@ async def health():
         "service": "ultron-core",
     }
 
+chat_router = create_chat_router(fakellm)
 app.include_router(chat_router)

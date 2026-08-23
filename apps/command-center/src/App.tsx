@@ -117,7 +117,7 @@ function App() {
       <div
         style={{
           position: "relative",
-          padding: "1%",
+          padding: "3% 1%",
           margin: "0 1%",
           border: "1px solid rgba(64, 142, 173, 1)",
           borderRadius: "20px",
@@ -198,7 +198,7 @@ function App() {
             </button>
           </div>
         )}
-        <p>{ultronResponse}</p>
+        <p style={{ color: "#FFF" }}>{ultronResponse}</p>
       </div>
       <div
         style={{
