@@ -69,7 +69,7 @@ function App() {
     }
 
     checkCore();
-    const intervalId = setInterval(checkCore, 5000);
+    const intervalId = setInterval(checkCore, 1000);
 
     return () => {
       clearInterval(intervalId);

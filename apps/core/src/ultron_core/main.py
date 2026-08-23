@@ -2,8 +2,14 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from .api.chat import create_chat_router
 from .llm.fake import FakeLLM
+from .config.settings import settings
 
-llm = FakeLLM()
+if settings.llm_provider == "fake":
+    llm = FakeLLM()
+else:
+    raise NotImplementedError(
+        f"LLM provider '{settings.llm_provider}' is not implemented yet"
+    )
 
 app = FastAPI(
     title="ULTRON Core",
