@@ -23,3 +23,6 @@ dev = [
     "httpx2>=2.12.0",
     "pytest>=9.1.1",
 ]
+
+[tool.vercel]
+entrypoint = "src.ultron_core.main:app"
