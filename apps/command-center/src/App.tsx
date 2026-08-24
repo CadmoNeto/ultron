@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import ultronIcon from "./assets/ultron-icon.svg";
+import { env } from "./config/ev.ts";
 
 type CoreStatus = "checking" | "online" | "offline";
 
@@ -18,7 +19,7 @@ function App() {
         setIsSending(true);
         const bodyRequest = JSON.stringify({ message: messageAux });
 
-        const response = await fetch("http://127.0.0.1:8000/chat", {
+        const response = await fetch(`${env.coreUrl}/chat`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -40,7 +41,6 @@ function App() {
       } catch {
         setUltronResponse("Infelizmente não consegui processar...");
         setTextInput("");
-        setCoreStatus("offline");
       } finally {
         setIsSending(false);
       }
@@ -50,7 +50,7 @@ function App() {
   useEffect(() => {
     async function checkCore() {
       try {
-        const response = await fetch("http://127.0.0.1:8000/health");
+        const response = await fetch(`${env.coreUrl}/health`);
 
         if (!response.ok) {
           throw new Error("Core unavailable");
@@ -69,7 +69,7 @@ function App() {
     }
 
     checkCore();
-    const intervalId = setInterval(checkCore, 1000);
+    const intervalId = setInterval(checkCore, 5000);
 
     return () => {
       clearInterval(intervalId);
