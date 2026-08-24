@@ -3,9 +3,11 @@ import ultronIcon from "./assets/ultron-icon.svg";
 import { env } from "./config/ev.ts";
 
 type CoreStatus = "checking" | "online" | "offline";
+type UltronState = "idle" | "thinking" | "error";
 
 function App() {
   const [coreStatus, setCoreStatus] = useState<CoreStatus>("checking");
+  const [ultronState, setUltronState] = useState<UltronState>("idle");
   const [textInput, setTextInput] = useState<string>("");
   const [ultronResponse, setUltronResponse] = useState<string>("");
   const [isSending, setIsSending] = useState<boolean>(false);
@@ -17,6 +19,7 @@ function App() {
     if (!isSending && messageAux !== "") {
       try {
         setIsSending(true);
+        setUltronState("thinking");
         const bodyRequest = JSON.stringify({ message: messageAux });
 
         const response = await fetch(`${env.coreUrl}/chat`, {
@@ -30,6 +33,7 @@ function App() {
         if (!response.ok) {
           const answer = `Infelizmente não consegui processar...`;
           setUltronResponse(answer);
+          setUltronState("error");
           setTextInput("");
 
           return;
@@ -37,9 +41,11 @@ function App() {
         const data = await response.json();
 
         setUltronResponse(data["message"]);
+        setUltronState("idle");
         setTextInput("");
       } catch {
         setUltronResponse("Infelizmente não consegui processar...");
+        setUltronState("error");
         setTextInput("");
       } finally {
         setIsSending(false);
