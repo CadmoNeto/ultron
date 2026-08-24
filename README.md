@@ -29,10 +29,13 @@ The project prioritizes **working software, modularity, observability, security,
 - ✅ Swappable LLM provider architecture
 - ✅ Fake LLM provider for deterministic development and testing
 - ✅ Dependency injection of the LLM implementation
+- ✅ Environment-based Core configuration
+- ✅ Typed configuration validation with Pydantic Settings
+- ✅ LLM provider selection through environment variables
+- ✅ Local `.env` support with versioned `.env.example`
 
 ### Next
 
-- ⏳ Local configuration system
 - ⏳ Structured logging
 - ⏳ Real LLM provider integration
 - ⏳ First real ULTRON tool
@@ -103,6 +106,60 @@ The important architectural constraint is that the **Orchestrator depends on the
 
 This keeps the Core independent from individual providers and allows different implementations to be introduced without changing the HTTP API or orchestration layer.
 
+## Core Configuration
+
+ULTRON Core configuration is loaded from environment variables using **Pydantic Settings**.
+
+The configuration layer is responsible for validating values before the application is assembled.
+
+The current configuration flow is:
+
+```text
+Environment variables
+        ↓
+     Settings
+        ↓
+Provider configuration
+        ↓
+     main.py
+        ↓
+Concrete implementation
+```
+
+The currently supported LLM provider is:
+
+```text
+fake
+```
+
+If no provider is explicitly configured, ULTRON uses the fake provider by default for local development.
+
+### Environment file
+
+Copy the example environment file:
+
+```bash
+cd apps/core
+```
+
+Create a local `.env` based on:
+
+```text
+.env.example
+```
+
+Current example:
+
+```env
+ULTRON_LLM_PROVIDER=fake
+```
+
+The `.env` file is intentionally excluded from Git and must be used for local configuration and future secrets.
+
+The `.env.example` file is versioned and documents the environment variables required to run the project.
+
+Invalid configuration values cause the Core to fail during startup instead of silently falling back to an unexpected configuration.
+
 ## Repository Structure
 
 ```text
@@ -114,6 +171,9 @@ ultron/
 │   │   │       ├── api/
 │   │   │       │   └── chat.py
 │   │   │       │
+│   │   │       ├── config/
+│   │   │       │   └── settings.py
+│   │   │       │
 │   │   │       ├── llm/
 │   │   │       │   ├── protocol.py
 │   │   │       │   └── fake.py
@@ -124,6 +184,7 @@ ultron/
 │   │   │       ├── __init__.py
 │   │   │       └── main.py
 │   │   │
+│   │   ├── .env.example
 │   │   ├── pyproject.toml
 │   │   └── uv.lock
 │   │
@@ -148,6 +209,7 @@ Modules are intentionally introduced only when their responsibilities become nec
 - Python 3.12+
 - FastAPI
 - Pydantic
+- Pydantic Settings
 - Uvicorn
 - uv
 
@@ -176,6 +238,28 @@ Install:
 - npm
 
 Clone the repository and enter the project directory.
+
+### Configure the Core
+
+The default development configuration already uses `FakeLLM`.
+
+Optionally, create:
+
+```text
+apps/core/.env
+```
+
+based on:
+
+```text
+apps/core/.env.example
+```
+
+Example:
+
+```env
+ULTRON_LLM_PROVIDER=fake
+```
 
 ### Start the ULTRON Core
 
@@ -230,13 +314,15 @@ cd apps/command-center
 npm run lint
 ```
 
+A successful ESLint run may finish without printing additional output.
+
 ### Command Center production build
 
 ```bash
 npm run build
 ```
 
-A successful lint run produces no ESLint errors, and a successful build generates the production bundle.
+A successful build generates the production bundle without compilation errors.
 
 ## Current LLM Architecture
 
@@ -259,7 +345,11 @@ Orchestrator
 
 `FakeLLM` currently provides a deterministic implementation that allows the complete application flow to be developed without external API dependencies.
 
-A real provider will be introduced only after the configuration boundary is established.
+The provider is selected during application composition from the validated Core configuration.
+
+This means the HTTP API and Orchestrator do not need to know how configuration is stored or which concrete provider is active.
+
+A real LLM provider will be introduced without changing the existing LLM contract.
 
 ## Roadmap
 
@@ -269,12 +359,15 @@ ULTRON evolves through demonstrated capabilities rather than fixed deadlines.
 
 Target capabilities:
 
-- Core running locally
-- Text chat
-- Basic Command Center
-- Configuration and logging
-- First real tool
-- Defined repository structure
+- ✅ Core running locally
+- ✅ Text chat
+- ✅ Basic Command Center
+- 🚧 Configuration and logging
+  - ✅ Local configuration
+  - ⏳ Structured logging
+
+- ⏳ First real tool
+- ✅ Defined repository structure
 
 ### v0.2 — Home
 
