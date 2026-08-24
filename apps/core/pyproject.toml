@@ -26,3 +26,6 @@ dev = [
 
 [tool.vercel]
 entrypoint = "src.ultron_core.main:app"
+
+[project.scripts]
+ultron = "ultron_core.main:app"

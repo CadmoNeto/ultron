@@ -1,8 +1,14 @@
+import logging
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from .api.chat import create_chat_router
 from .llm.fake import FakeLLM
 from .config.settings import settings
+# from .logging_config import setup_log
+
+
+# setup_log()
+# logging.getLogger("MAIN.PY")
 
 if settings.llm_provider == "fake":
     llm = FakeLLM()
@@ -36,3 +42,13 @@ async def health():
 
 chat_router = create_chat_router(llm)
 app.include_router(chat_router)
+
+def main():
+    import uvicorn
+
+    uvicorn.run(
+        "ultron_core.main:app",
+        host="127.0.0.1",
+        port=8000,
+        reload=True
+    )
