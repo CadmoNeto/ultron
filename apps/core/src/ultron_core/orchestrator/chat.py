@@ -7,9 +7,9 @@ async def process_message(message: str, llm: LLM) -> str:
     logger.info("Chat processing started.")
     message_aux = message.lower()
 
-    teste = await llm.generate(message_aux)
+    llm_response = await llm.generate(message_aux)
+    logger.debug("LLM response: %s ", llm_response)
     logger.info("Chat processing completed.")
-    print(teste)
 
     if message_aux.startswith(("olá", "ola")):
         return "Olá, Cadmo."
