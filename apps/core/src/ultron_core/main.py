@@ -4,11 +4,12 @@ from fastapi.middleware.cors import CORSMiddleware
 from .api.chat import create_chat_router
 from .llm.fake import FakeLLM
 from .config.settings import settings
-# from .logging_config import setup_log
+from .logging_config import setup_log
 
 
-# setup_log()
-# logging.getLogger("MAIN.PY")
+setup_log(settings.log_level)
+logger = logging.getLogger(__name__)
+logger.info("ULTRON Core Starting...")
 
 if settings.llm_provider == "fake":
     llm = FakeLLM()

@@ -28,4 +28,4 @@ dev = [
 entrypoint = "src.ultron_core.main:app"
 
 [project.scripts]
-ultron = "ultron_core.main:app"
+ultron = "ultron_core.main:main"
