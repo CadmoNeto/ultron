@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import ultronIcon from "./assets/ultron-icon.svg";
 import { env } from "./config/ev.ts";
+import "./App.css";
+import InfoCard from "./components/InfoCard/InfoCard.tsx";
 
 type CoreStatus = "checking" | "online" | "offline";
 type UltronState = "idle" | "thinking" | "error";
@@ -83,154 +85,141 @@ function App() {
   }, []);
 
   return (
-    <main
-      style={{
-        minHeight: "100vh",
-        display: "grid",
-        gridTemplateColumns: "1fr 3fr 1fr",
-        gap: "12px",
-        padding: "12px",
-        boxSizing: "border-box",
-        background:
-          "radial-gradient(circle,rgba(87, 109, 122, 1) 0%, rgba(11, 50, 66, 1) 84%)",
-      }}
-    >
-      <div
-        style={{
-          padding: "1%",
-          color: "#FFF",
-          border: "1px solid rgba(64, 142, 173, 1)",
-          borderRadius: "20px",
-          background:
-            "radial-gradient(circle,rgba(64, 142, 173, 1) 0%, rgba(24, 71, 89, 1) 84%)",
-        }}
-      >
-        texto
-        <br />
-        texto
-        <br />
-        texto
-        <br />
-        texto
-        <br />
-        texto
-        <br />
-        texto
-        <br />
-        texto
-        <br />
-      </div>
-      <div
-        style={{
-          position: "relative",
-          padding: "3% 1%",
-          margin: "0 1%",
-          border: "1px solid rgba(64, 142, 173, 1)",
-          borderRadius: "20px",
-          background:
-            "radial-gradient(circle,rgba(64, 142, 173, 1) 0%, rgba(24, 71, 89, 1) 84%)",
-        }}
-      >
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-          }}
-        >
-          <img width={"150px"} height={"150px"} alt="" src={ultronIcon} />
-        </div>
-        <div
-          style={{
-            position: "absolute",
-            top: "16px",
-            right: "20px",
-            display: "flex",
-            alignItems: "center",
-            gap: "6px",
-            fontSize: "14px",
-          }}
-        >
-          {coreStatus === "checking" && (
-            <>
-              <span>🟡</span>
-              <span style={{ color: "#FFD166" }}>❯ CHECKING</span>
-            </>
-          )}
-          {coreStatus === "offline" && (
-            <>
-              <span>🔴</span>
-              <span style={{ color: "#DD2E44" }}>❯ OFFLINE</span>
-            </>
-          )}
+    <main className="app-shell">
+      <header className="header">
+        <span className="title">ULTRON</span>
+        <span>Command Center</span>
+      </header>
+      <div className="content-shell">
+        <aside className="side-panel panel">
+          <InfoCard
+            title="Connection"
+            content={coreStatus.toUpperCase()}
+            tone={
+              coreStatus === "online"
+                ? "online"
+                : coreStatus === "offline"
+                  ? "error"
+                  : "warning"
+            }
+          />
 
-          {coreStatus === "online" && (
-            <>
-              <span>🟢</span>
-              <span style={{ color: "#78B159" }}>❯ ONLINE</span>
-            </>
-          )}
-        </div>
-
-        <h1 style={{ color: "#FFF" }}>ULTRON</h1>
-
-        {coreStatus === "checking" && <p>Checking Core...</p>}
-        {coreStatus === "online" && (
-          <div>
-            <input
-              placeholder="Escreva aqui..."
-              name="textInput"
-              value={textInput}
-              onKeyDown={(event) => {
-                if (!isSending && textInput.trim() !== "") {
-                  if (event.key === "Enter") {
-                    sendMessage(textInput);
-                  }
-                }
-              }}
-              onChange={(event) => {
-                setTextInput(event.target.value);
-              }}
-              disabled={isSending}
-            />
-            &nbsp;
-            <button
-              type="button"
-              onClick={() => {
-                sendMessage(textInput);
-              }}
-              disabled={isSending || textInput.trim() === ""}
-            >
-              Enviar
-            </button>
+          <InfoCard
+            title="ULTRON"
+            content={ultronState.toUpperCase()}
+            tone={
+              ultronState === "idle"
+                ? "accent"
+                : ultronState === "error"
+                  ? "error"
+                  : "warning"
+            }
+          />
+        </aside>
+        <section className="main-panel panel">
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+            }}
+          >
+            <img width={"150px"} height={"150px"} alt="" src={ultronIcon} />
           </div>
-        )}
-        <p style={{ color: "#FFF" }}>{ultronResponse}</p>
+          <div
+            style={{
+              position: "absolute",
+              top: "16px",
+              right: "20px",
+              display: "flex",
+              alignItems: "center",
+              gap: "6px",
+              fontSize: "14px",
+            }}
+          >
+            {coreStatus === "checking" && (
+              <>
+                <span>🟡</span>
+                <span className="title" style={{ color: "var(--warning)" }}>
+                  ❯ CHECKING
+                </span>
+              </>
+            )}
+            {coreStatus === "offline" && (
+              <>
+                <span>🔴</span>
+                <span className="title" style={{ color: "var(--error)" }}>
+                  ❯ OFFLINE
+                </span>
+              </>
+            )}
+
+            {coreStatus === "online" && (
+              <>
+                <span>🟢</span>
+                <span className="title" style={{ color: "var(--online)" }}>
+                  ❯ ONLINE
+                </span>
+              </>
+            )}
+          </div>
+
+          <h1 className="title">ULTRON</h1>
+
+          {coreStatus === "checking" && <p>Checking Core...</p>}
+          {coreStatus === "online" && (
+            <div>
+              <input
+                placeholder="Escreva aqui..."
+                name="textInput"
+                value={textInput}
+                onKeyDown={(event) => {
+                  if (!isSending && textInput.trim() !== "") {
+                    if (event.key === "Enter") {
+                      sendMessage(textInput);
+                    }
+                  }
+                }}
+                onChange={(event) => {
+                  setTextInput(event.target.value);
+                }}
+                disabled={isSending}
+              />
+              &nbsp;
+              <button
+                type="button"
+                onClick={() => {
+                  sendMessage(textInput);
+                }}
+                disabled={isSending || textInput.trim() === ""}
+              >
+                Enviar
+              </button>
+            </div>
+          )}
+          <p style={{ color: "#FFF" }}>{ultronResponse}</p>
+        </section>
+        <aside className="side-panel panel">
+          texto
+          <br />
+          texto
+          <br />
+          texto
+          <br />
+          texto
+          <br />
+          texto
+          <br />
+          texto
+          <br />
+          texto
+          <br />
+        </aside>
       </div>
-      <div
-        style={{
-          padding: "1%",
-          color: "#FFF",
-          border: "1px solid rgba(64, 142, 173, 1)",
-          borderRadius: "20px",
-          background:
-            "radial-gradient(circle,rgba(64, 142, 173, 1) 0%, rgba(24, 71, 89, 1) 84%)",
-        }}
-      >
-        texto
-        <br />
-        texto
-        <br />
-        texto
-        <br />
-        texto
-        <br />
-        texto
-        <br />
-        texto
-        <br />
-        texto
-        <br />
-      </div>
+      <footer>
+        <span>
+          ULTRON Core • {coreStatus === "online" ? "Online" : "Offline"}
+        </span>
+      </footer>
     </main>
   );
 }

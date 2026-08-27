@@ -1,0 +1,28 @@
+.info-card {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid color-mix(in srgb, var(--border) 60%, transparent);
+  border-radius: var(--radius);
+  padding: 0.4em;
+  background-color: color-mix(in srgb, var(--background) 50%, var(--panels));
+}
+
+.info-card_title {
+  font-family: "Orbitron", sans-serif;
+}
+
+.info-card_content.default {
+  color: var(--text);
+}
+.info-card_content.accent {
+  color: var(--accent);
+}
+.info-card_content.online {
+  color: var(--online);
+}
+.info-card_content.warning {
+  color: var(--warning);
+}
+.info-card_content.error {
+  color: var(--error);
+}

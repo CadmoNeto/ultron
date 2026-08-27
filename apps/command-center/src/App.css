@@ -29,12 +29,6 @@ body {
   font-family: system-ui, "Segoe UI", sans-serif;
 }
 
-html,
-body,
-#root {
-  min-height: 100vh;
-}
-
 button,
 input {
   font: inherit;
@@ -42,4 +36,42 @@ input {
 
 .title {
   font-family: "Orbitron", sans-serif;
+}
+
+.app-shell {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  gap: 1em;
+  padding: 0.5em 1em;
+  min-height: 100vh;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+}
+
+.content-shell {
+  display: grid;
+  grid-template-columns: 250px 1fr 250px;
+  gap: 1em;
+}
+
+.panel {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background-color: var(--panels);
+}
+
+.side-panel {
+  padding: 0.5em;
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
+
+.main-panel {
+  position: relative;
+  padding: 0.5rem 0.1rem;
+  /* "radial-gradient(circle,rgba(64, 142, 173, 1) 0%, rgba(24, 71, 89, 1) 84%)", */
 }
