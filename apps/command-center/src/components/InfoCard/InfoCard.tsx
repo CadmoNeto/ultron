@@ -1,6 +1,6 @@
 import "./InfoCard.css";
 
-interface InfoCardProps {
+export interface InfoCardProps {
   title: string;
   content: string;
   tone?: "default" | "accent" | "online" | "warning" | "error";

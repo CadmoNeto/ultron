@@ -7,12 +7,28 @@ import InfoCard from "./components/InfoCard/InfoCard.tsx";
 type CoreStatus = "checking" | "online" | "offline";
 type UltronState = "idle" | "thinking" | "error";
 
+function getRequestPresentation(sending, state) {
+  const status = sending
+    ? "PROCESSING..."
+    : state === "error"
+      ? "ERROR"
+      : "READY";
+
+  const tone:   = sending ? "warning" : state === "error" ? "error" : "online";
+  return {
+    status: status,
+    tone: tone,
+  };
+}
+
 function App() {
   const [coreStatus, setCoreStatus] = useState<CoreStatus>("checking");
   const [ultronState, setUltronState] = useState<UltronState>("idle");
   const [textInput, setTextInput] = useState<string>("");
   const [ultronResponse, setUltronResponse] = useState<string>("");
   const [isSending, setIsSending] = useState<boolean>(false);
+
+  const requestPresentation = getRequestPresentation(isSending, ultronState);
 
   async function sendMessage(message: string) {
     let messageAux = message.replace(/\s+/g, " ");
@@ -215,20 +231,16 @@ function App() {
           <p style={{ color: "#FFF" }}>{ultronResponse}</p>
         </section>
         <aside className="side-panel panel">
-          texto
-          <br />
-          texto
-          <br />
-          texto
-          <br />
-          texto
-          <br />
-          texto
-          <br />
-          texto
-          <br />
-          texto
-          <br />
+          <span className="title side-panel-title">INTERACTION</span>
+          <InfoCard title="Input" content="TEXT" />
+
+          <InfoCard
+            title="Request"
+            content={requestPresentation.status}
+            tone={requestPresentation.tone}
+          />
+
+          <InfoCard title="Endpoint" content="/chat" tone={"accent"} />
         </aside>
       </div>
       <footer>
