@@ -86,12 +86,13 @@ function App() {
 
   return (
     <main className="app-shell">
-      <header className="header">
-        <span className="title">ULTRON</span>
+      <header className="header title">
+        <span className="header-title">ULTRON</span>
         <span>Command Center</span>
       </header>
       <div className="content-shell">
         <aside className="side-panel panel">
+          <span className="title side-panel-title">CORE STATUS</span>
           <InfoCard
             title="Connection"
             content={coreStatus.toUpperCase()}
@@ -115,6 +116,21 @@ function App() {
                   : "warning"
             }
           />
+
+          <InfoCard
+            title="About"
+            content={
+              coreStatus === "online"
+                ? "ULTRON Core está online e pronto para receber requisições"
+                : coreStatus === "offline"
+                  ? "ULTRON Core está offline no momento"
+                  : "ULTRON Command Center está tentando se conectar ao ULTRON Core"
+            }
+          />
+
+          <div style={{ marginTop: "auto" }}>
+            <InfoCard title="" content="v0.1.0 • Local Core" />
+          </div>
         </aside>
         <section className="main-panel panel">
           <div
@@ -217,7 +233,8 @@ function App() {
       </div>
       <footer>
         <span>
-          ULTRON Core • {coreStatus === "online" ? "Online" : "Offline"}
+          ULTRON Core •{" "}
+          {coreStatus.charAt(0).toUpperCase() + coreStatus.slice(1)}
         </span>
       </footer>
     </main>
