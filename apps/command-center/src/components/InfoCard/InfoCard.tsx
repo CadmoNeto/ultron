@@ -1,12 +1,14 @@
 import "./InfoCard.css";
 
-export interface InfoCardProps {
+export type Tone = "default" | "accent" | "online" | "warning" | "error";
+
+interface InfoCardProps {
   title: string;
   content: string;
-  tone?: "default" | "accent" | "online" | "warning" | "error";
+  tone?: Tone;
 }
 
-export default function InfoCard({
+export function InfoCard({
   title,
   content,
   tone = "default",

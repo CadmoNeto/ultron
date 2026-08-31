@@ -2,19 +2,30 @@ import { useEffect, useState } from "react";
 import ultronIcon from "./assets/ultron-icon.svg";
 import { env } from "./config/ev.ts";
 import "./App.css";
-import InfoCard from "./components/InfoCard/InfoCard.tsx";
+import { InfoCard, type Tone } from "./components/InfoCard/InfoCard.tsx";
 
 type CoreStatus = "checking" | "online" | "offline";
 type UltronState = "idle" | "thinking" | "error";
 
-function getRequestPresentation(sending, state) {
+function getUltronStateTone(state: UltronState) {
+  const tone: Tone =
+    state === "idle" ? "accent" : state === "error" ? "error" : "warning";
+
+  return tone;
+}
+
+function getRequestPresentation(sending: boolean, state: UltronState) {
   const status = sending
     ? "PROCESSING..."
     : state === "error"
       ? "ERROR"
       : "READY";
 
-  const tone:   = sending ? "warning" : state === "error" ? "error" : "online";
+  const tone: Tone = sending
+    ? "warning"
+    : state === "error"
+      ? "error"
+      : "online";
   return {
     status: status,
     tone: tone,
@@ -29,6 +40,7 @@ function App() {
   const [isSending, setIsSending] = useState<boolean>(false);
 
   const requestPresentation = getRequestPresentation(isSending, ultronState);
+  const ultronTone = getUltronStateTone(ultronState);
 
   async function sendMessage(message: string) {
     let messageAux = message.replace(/\s+/g, " ");
@@ -38,6 +50,7 @@ function App() {
       try {
         setIsSending(true);
         setUltronState("thinking");
+        setUltronResponse("...");
         const bodyRequest = JSON.stringify({ message: messageAux });
 
         const response = await fetch(`${env.coreUrl}/chat`, {
@@ -145,29 +158,14 @@ function App() {
           />
 
           <div style={{ marginTop: "auto" }}>
-            <InfoCard title="" content="v0.1.0 • Local Core" />
+            <InfoCard title="" content="v0.0.1 • Local Core" />
           </div>
         </aside>
         <section className="main-panel panel">
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-            }}
-          >
+          <div className={`ultron-face ${ultronTone}`}>
             <img width={"150px"} height={"150px"} alt="" src={ultronIcon} />
           </div>
-          <div
-            style={{
-              position: "absolute",
-              top: "16px",
-              right: "20px",
-              display: "flex",
-              alignItems: "center",
-              gap: "6px",
-              fontSize: "14px",
-            }}
-          >
+          <div className="ultron-core-status">
             {coreStatus === "checking" && (
               <>
                 <span>🟡</span>
@@ -195,40 +193,48 @@ function App() {
             )}
           </div>
 
-          <h1 className="title">ULTRON</h1>
+          <span className="main-panel-title title">ULTRON</span>
+          <span className="title">AI Command Center</span>
 
           {coreStatus === "checking" && <p>Checking Core...</p>}
           {coreStatus === "online" && (
-            <div>
-              <input
-                placeholder="Escreva aqui..."
-                name="textInput"
-                value={textInput}
-                onKeyDown={(event) => {
-                  if (!isSending && textInput.trim() !== "") {
-                    if (event.key === "Enter") {
-                      sendMessage(textInput);
+            <>
+              <div className={`ultron-state ${ultronTone}`}>
+                <span>{ultronState.toUpperCase()}</span>
+              </div>
+              <div>
+                <input
+                  placeholder="Escreva aqui..."
+                  name="textInput"
+                  value={textInput}
+                  onKeyDown={(event) => {
+                    if (!isSending && textInput.trim() !== "") {
+                      if (event.key === "Enter") {
+                        sendMessage(textInput);
+                      }
                     }
-                  }
-                }}
-                onChange={(event) => {
-                  setTextInput(event.target.value);
-                }}
-                disabled={isSending}
-              />
-              &nbsp;
-              <button
-                type="button"
-                onClick={() => {
-                  sendMessage(textInput);
-                }}
-                disabled={isSending || textInput.trim() === ""}
-              >
-                Enviar
-              </button>
-            </div>
+                  }}
+                  onChange={(event) => {
+                    setTextInput(event.target.value);
+                  }}
+                  disabled={isSending}
+                />
+                &nbsp;
+                <button
+                  type="button"
+                  onClick={() => {
+                    sendMessage(textInput);
+                  }}
+                  disabled={isSending || textInput.trim() === ""}
+                >
+                  Enviar
+                </button>
+              </div>
+            </>
           )}
-          <p style={{ color: "#FFF" }}>{ultronResponse}</p>
+          <div className="response-area">
+            <p>{ultronResponse}</p>
+          </div>
         </section>
         <aside className="side-panel panel">
           <span className="title side-panel-title">INTERACTION</span>
