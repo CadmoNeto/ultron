@@ -49,10 +49,17 @@ input {
 .header {
   display: flex;
   flex-direction: column;
+  border-bottom: 1px solid
+    color-mix(in srgb, var(--text-secondary) 50%, transparent);
+  padding-bottom: 0.5em;
 }
 
 .header-title {
   font-size: 24px;
+}
+
+.header-subtitle {
+  color: var(--text-secondary);
 }
 
 .content-shell {
@@ -187,11 +194,23 @@ input {
   font-size: 14px;
 }
 
-.response-area {
+.chat-area {
   border: 1px solid color-mix(in srgb, var(--text-secondary) 70%, var(--text));
   background-color: color-mix(in srgb, var(--background) 50%, var(--panels));
   border-radius: var(--radius);
-  margin: 1em 0em;
+  width: 100%;
+  max-width: 450px;
+  min-height: 100px;
+  max-height: 300px;
+  margin-top: auto;
+  margin-bottom: 3em;
+}
+
+.response-area {
+  /* border: 1px solid color-mix(in srgb, var(--text-secondary) 70%, var(--text)); */
+  background-color: transparent;
+  /* border-radius: var(--radius); */
+  /* margin: 1em 0em; */
   padding: 0em 0.5em;
   width: 100%;
   max-width: 450px;
@@ -210,9 +229,9 @@ input {
   gap: 0.5em;
   width: 100%;
   max-width: 450px;
-  border: 1px solid color-mix(in srgb, var(--text-secondary) 70%, var(--text));
-  background-color: color-mix(in srgb, var(--background) 50%, var(--panels));
-  border-radius: var(--radius);
+  /* border: 1px solid color-mix(in srgb, var(--text-secondary) 70%, var(--text)); */
+  background-color: transparent;
+  /* border-radius: var(--radius); */
 }
 
 /* .input-area:has(:focus-visible) {
@@ -255,4 +274,25 @@ input {
   to {
     transform: rotate(360deg);
   }
+}
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  border-top: 1px solid
+    color-mix(in srgb, var(--text-secondary) 50%, transparent);
+  padding: 0em 1em;
+  padding-top: 0.5em;
+}
+
+.core.online {
+  color: var(--online);
+}
+
+.core.warning {
+  color: var(--warning);
+}
+
+.core.error {
+  color: var(--error);
 }

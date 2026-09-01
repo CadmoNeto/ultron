@@ -14,8 +14,8 @@ async def process_message(message: str, llm: LLM) -> str:
     if message_aux.startswith(("olá", "ola")):
         return "Olá, Cadmo."
     elif message_aux.startswith("oi"):
-        return "Oi, Cadmo."
-    elif message_aux == "":
-        return "Preciso que você diga algo..."
+        return "Oi, Cadmo.i, Cadmo.i, Cadmo.i, Cadmo.i, Cadmo.i, Cadmo.i, Cadmo.i, Cadmo.i, Cadmo.i, Cadmo.i, Cadmo.i, Cadmo.i, Cadmo.i, Cadmo.i, Cadmo.i, Cadmo.i, Cadmo.i, Cadmo.i, Cadmo.i, Cadmo.i, Cadmo.i, Cadmo.i, Cadmo.i, Cadmo.i, Cadmo.i, Cadmo.i, Cadmo.i, Cadmo.i, Cadmo.i, Cadmo.i, Cadmo.i, Cadmo.i, Cadmo.i, Cadmo.i, Cadmo.i, Cadmo.i, Cadmo.i, Cadmo.i, Cadmo.i, Cadmo.i, Cadmo.i, Cadmo.i, Cadmo.i, Cadmo.i, Cadmo.i, Cadmo.i, Cadmo.i, Cadmo.i, Cadmo.i, Cadmo.i, Cadmo.i, Cadmo.i, Cadmo.i, Cadmo.i, Cadmo.i, Cadmo.i, Cadmo.i, Cadmo.i, Cadmo.i, Cadmo.i, Cadmo.i, Cadmo.i, Cadmo.i, Cadmo.i, Cadmo.i, Cadmo.i, Cadmo.i, Cadmo.i, Cadmo.i, Cadmo.i, Cadmo.i, Cadmo.i, Cadmo.i, Cadmo.i, Cadmo.i, Cadmo.i, Cadmo.i, Cadmo.i, Cadmo.i, Cadmo.i, Cadmo.i, Cadmo.i, Cadmo.i, Cadmo.i, Cadmo.i, Cadmo.i, Cadmo.i, Cadmo.i, Cadmo.i, Cadmo.i, Cadmo.i, Cadmo.i, Cadmo.i, Cadmo.i, Cadmo."
+    # elif message_aux == "":
+    #     return "Preciso que você diga algo..."
     else:
         return "Não entendi."

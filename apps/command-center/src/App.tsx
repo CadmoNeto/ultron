@@ -32,6 +32,13 @@ function getRequestPresentation(sending: boolean, state: UltronState) {
   };
 }
 
+function getCoreTone(core: CoreStatus) {
+  const tone: Tone =
+    core === "online" ? "online" : core === "checking" ? "warning" : "error";
+
+  return tone;
+}
+
 function App() {
   const [coreStatus, setCoreStatus] = useState<CoreStatus>("checking");
   const [ultronState, setUltronState] = useState<UltronState>("idle");
@@ -41,6 +48,7 @@ function App() {
 
   const requestPresentation = getRequestPresentation(isSending, ultronState);
   const ultronTone = getUltronStateTone(ultronState);
+  const coreTone = getCoreTone(coreStatus);
 
   async function sendMessage(message: string) {
     let messageAux = message.replace(/\s+/g, " ");
@@ -117,7 +125,7 @@ function App() {
     <main className="app-shell">
       <header className="header title">
         <span className="header-title">ULTRON</span>
-        <span>Command Center</span>
+        <span className="header-subtitle">Command Center</span>
       </header>
       <div className="content-shell">
         <aside className="side-panel panel">
@@ -169,26 +177,20 @@ function App() {
             {coreStatus === "checking" && (
               <>
                 <span>🟡</span>
-                <span className="title" style={{ color: "var(--warning)" }}>
-                  ❯ CHECKING
-                </span>
+                <span className={`title core ${coreTone}`}>❯ CHECKING</span>
               </>
             )}
             {coreStatus === "offline" && (
               <>
                 <span>🔴</span>
-                <span className="title" style={{ color: "var(--error)" }}>
-                  ❯ OFFLINE
-                </span>
+                <span className={`title core ${coreTone}`}>❯ OFFLINE</span>
               </>
             )}
 
             {coreStatus === "online" && (
               <>
                 <span>🟢</span>
-                <span className="title" style={{ color: "var(--online)" }}>
-                  ❯ ONLINE
-                </span>
+                <span className={`title core ${coreTone}`}>❯ ONLINE</span>
               </>
             )}
           </div>
@@ -202,35 +204,37 @@ function App() {
               <div className={`ultron-state ${ultronTone}`}>
                 <span>{ultronState.toUpperCase()}</span>
               </div>
-              <div className="response-area">
-                <p>{ultronResponse}</p>
-              </div>
-              <div className="input-area">
-                <input
-                  placeholder="Escreva aqui..."
-                  name="textInput"
-                  value={textInput}
-                  onKeyDown={(event) => {
-                    if (!isSending && textInput.trim() !== "") {
-                      if (event.key === "Enter") {
-                        sendMessage(textInput);
+              <div className="chat-area">
+                <div className="response-area">
+                  <p>{ultronResponse}</p>
+                </div>
+                <div className="input-area">
+                  <input
+                    placeholder="Escreva aqui..."
+                    name="textInput"
+                    value={textInput}
+                    onKeyDown={(event) => {
+                      if (!isSending && textInput.trim() !== "") {
+                        if (event.key === "Enter") {
+                          sendMessage(textInput);
+                        }
                       }
-                    }
-                  }}
-                  onChange={(event) => {
-                    setTextInput(event.target.value);
-                  }}
-                  disabled={isSending}
-                />
-                <button
-                  type="button"
-                  onClick={() => {
-                    sendMessage(textInput);
-                  }}
-                  disabled={isSending || textInput.trim() === ""}
-                >
-                  ⮚
-                </button>
+                    }}
+                    onChange={(event) => {
+                      setTextInput(event.target.value);
+                    }}
+                    disabled={isSending}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => {
+                      sendMessage(textInput);
+                    }}
+                    disabled={isSending || textInput.trim() === ""}
+                  >
+                    ⮚
+                  </button>
+                </div>
               </div>
             </>
           )}
@@ -248,11 +252,12 @@ function App() {
           <InfoCard title="Endpoint" content="/chat" tone={"accent"} />
         </aside>
       </div>
-      <footer>
-        <span>
-          ULTRON Core •{" "}
-          {coreStatus.charAt(0).toUpperCase() + coreStatus.slice(1)}
+      <footer className="footer">
+        <span>ULTRON Core</span>
+        <span className={`core ${coreTone}`}>
+          • {coreStatus.charAt(0).toUpperCase() + coreStatus.slice(1)}
         </span>
+        <span>v0.0.1</span>
       </footer>
     </main>
   );
