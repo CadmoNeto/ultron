@@ -190,13 +190,62 @@ input {
 .response-area {
   border: 1px solid color-mix(in srgb, var(--text-secondary) 70%, var(--text));
   background-color: color-mix(in srgb, var(--background) 50%, var(--panels));
+  border-radius: var(--radius);
   margin: 1em 0em;
   padding: 0em 0.5em;
   width: 100%;
   max-width: 450px;
   min-height: 70px;
-  height: 150px;
-  text-align: center;
+  max-height: 250px;
+  overflow-wrap: break-word;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, var(--text-secondary) 70%, var(--text))
+    color-mix(in srgb, var(--background) 50%, var(--panels));
+  scrollbar-gutter: stable;
+}
+
+.input-area {
+  display: flex;
+  gap: 0.5em;
+  width: 100%;
+  max-width: 450px;
+  border: 1px solid color-mix(in srgb, var(--text-secondary) 70%, var(--text));
+  background-color: color-mix(in srgb, var(--background) 50%, var(--panels));
+  border-radius: var(--radius);
+}
+
+/* .input-area:has(:focus-visible) {
+  outline: 1px solid var(--accent);
+} */
+
+.input-area input {
+  flex: 1;
+  padding: 0.5em;
+  border: none;
+  background-color: transparent;
+  color: var(--text);
+}
+
+.input-area input:focus {
+  outline: none;
+}
+
+.input-area input::placeholder {
+  color: var(--text-secondary);
+}
+
+.input-area button {
+  padding: 0.5em 1em;
+  border: none;
+  background-color: transparent;
+  color: color-mix(in srgb, var(--text-secondary) 70%, var(--text));
+  cursor: pointer;
+}
+
+.input-area button:disabled {
+  cursor: default;
+  opacity: 0.5;
 }
 
 @keyframes spin {

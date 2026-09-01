@@ -202,7 +202,10 @@ function App() {
               <div className={`ultron-state ${ultronTone}`}>
                 <span>{ultronState.toUpperCase()}</span>
               </div>
-              <div>
+              <div className="response-area">
+                <p>{ultronResponse}</p>
+              </div>
+              <div className="input-area">
                 <input
                   placeholder="Escreva aqui..."
                   name="textInput"
@@ -219,7 +222,6 @@ function App() {
                   }}
                   disabled={isSending}
                 />
-                &nbsp;
                 <button
                   type="button"
                   onClick={() => {
@@ -227,14 +229,11 @@ function App() {
                   }}
                   disabled={isSending || textInput.trim() === ""}
                 >
-                  Enviar
+                  ⮚
                 </button>
               </div>
             </>
           )}
-          <div className="response-area">
-            <p>{ultronResponse}</p>
-          </div>
         </section>
         <aside className="side-panel panel">
           <span className="title side-panel-title">INTERACTION</span>
