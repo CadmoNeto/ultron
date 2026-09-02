@@ -31,7 +31,6 @@ async def process_message(message: str, llm: LLM, system_status_provider: System
     message_aux = message.lower()
 
     llm_response = await llm.generate(message_aux)
-    logger.debug("LLM response: %s ", llm_response)
     logger.info("Chat processing completed.")
 
     message_return = ""

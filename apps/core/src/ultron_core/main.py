@@ -1,9 +1,13 @@
 import logging
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+
 from .api.chat import create_chat_router
 from .llm.fake import FakeLLM
+
+from .api.system_status import creat_system_status_router
 from .tools.psutil_system_status import PsutilSystemStatus
+
 from .config.settings import settings
 from .logging_config import setup_log
 
@@ -46,6 +50,9 @@ async def health():
 
 chat_router = create_chat_router(llm, system_status_provider)
 app.include_router(chat_router)
+
+system_status_router = creat_system_status_router(system_status_provider)
+app.include_router(system_status_router)
 
 def main():
     import uvicorn
