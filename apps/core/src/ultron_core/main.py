@@ -3,6 +3,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from .api.chat import create_chat_router
 from .llm.fake import FakeLLM
+from .tools.psutil_system_status import PsutilSystemStatus
 from .config.settings import settings
 from .logging_config import setup_log
 
@@ -17,6 +18,8 @@ else:
     raise NotImplementedError(
         f"LLM provider '{settings.llm_provider}' is not implemented yet"
     )
+
+system_status_provider = PsutilSystemStatus()
 
 app = FastAPI(
     title="ULTRON Core",
@@ -41,7 +44,7 @@ async def health():
         "service": "ultron-core",
     }
 
-chat_router = create_chat_router(llm)
+chat_router = create_chat_router(llm, system_status_provider)
 app.include_router(chat_router)
 
 def main():

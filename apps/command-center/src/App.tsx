@@ -205,7 +205,12 @@ function App() {
                 <span>{ultronState.toUpperCase()}</span>
               </div>
               <div className="chat-area">
-                <div className="response-area">
+                <div
+                  className="response-area"
+                  onClick={() => {
+                    document.getElementsByName("textInput")[0].focus();
+                  }}
+                >
                   <p>{ultronResponse}</p>
                 </div>
                 <div className="input-area">
