@@ -3,6 +3,7 @@ import ultronIcon from "./assets/ultron-icon.svg";
 import { env } from "./config/ev.ts";
 import "./App.css";
 import { InfoCard, type Tone } from "./components/InfoCard/InfoCard.tsx";
+import { CircularProgressBar } from "./components/CircularProgressBar/CircularProgressBar.tsx";
 
 type CoreStatus = "checking" | "online" | "offline";
 type UltronState = "idle" | "thinking" | "error";
@@ -263,6 +264,8 @@ function App() {
           />
 
           <InfoCard title="Endpoint" content="/chat" tone={"accent"} />
+
+          <CircularProgressBar value={20} />
         </aside>
       </div>
       <footer className="footer">
