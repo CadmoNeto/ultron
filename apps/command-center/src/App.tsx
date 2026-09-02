@@ -50,6 +50,14 @@ function App() {
   const ultronTone = getUltronStateTone(ultronState);
   const coreTone = getCoreTone(coreStatus);
 
+  async function getSystemStatus() {
+    try {
+      const response = await fetch(`${env.coreUrl}/system_status`);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   async function sendMessage(message: string) {
     let messageAux = message.replace(/\s+/g, " ");
     messageAux = messageAux.trim();
