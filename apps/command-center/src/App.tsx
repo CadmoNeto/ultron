@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import ultronIcon from "./assets/ultron-icon.svg";
 import { env } from "./config/ev.ts";
 import "./App.css";
@@ -7,6 +7,13 @@ import { CircularProgressBar } from "./components/CircularProgressBar/CircularPr
 
 type CoreStatus = "checking" | "online" | "offline";
 type UltronState = "idle" | "thinking" | "error";
+type SystemStatusResult = {
+  cpu_percent: number;
+  memory_percent: number;
+  disk_percent: number;
+  uptime_seconds?: number;
+  uptime_string?: string;
+};
 
 function getUltronStateTone(state: UltronState) {
   const tone: Tone =
@@ -43,6 +50,12 @@ function getCoreTone(core: CoreStatus) {
 function App() {
   const [coreStatus, setCoreStatus] = useState<CoreStatus>("checking");
   const [ultronState, setUltronState] = useState<UltronState>("idle");
+  const [systemStatus, setSystemStatus] = useState<SystemStatusResult>({
+    cpu_percent: 0,
+    disk_percent: 0,
+    memory_percent: 0,
+    uptime_seconds: 0,
+  });
   const [textInput, setTextInput] = useState<string>("");
   const [ultronResponse, setUltronResponse] = useState<string>("");
   const [isSending, setIsSending] = useState<boolean>(false);
@@ -51,13 +64,7 @@ function App() {
   const ultronTone = getUltronStateTone(ultronState);
   const coreTone = getCoreTone(coreStatus);
 
-  async function getSystemStatus() {
-    try {
-      const response = await fetch(`${env.coreUrl}/system_status`);
-    } catch (error) {
-      console.log(error);
-    }
-  }
+  const inputRef = useRef<HTMLInputElement>(null);
 
   async function sendMessage(message: string) {
     let messageAux = message.replace(/\s+/g, " ");
@@ -102,33 +109,80 @@ function App() {
   }
 
   useEffect(() => {
-    async function checkCore() {
+    async function checkCore(): Promise<boolean> {
       try {
         const response = await fetch(`${env.coreUrl}/health`);
 
-        if (!response.ok) {
-          throw new Error("Core unavailable");
-        }
+        if (!response.ok) throw new Error("Core unavailable");
 
         const data = await response.json();
 
         if (data.status === "ok") {
           setCoreStatus("online");
-        } else {
-          setCoreStatus("offline");
+          return true;
         }
+
+        setCoreStatus("offline");
+        return false;
       } catch {
         setCoreStatus("offline");
+        return false;
       }
     }
 
-    checkCore();
-    const intervalId = setInterval(checkCore, 5000);
+    async function getSystemStatus() {
+      try {
+        const response = await fetch(`${env.coreUrl}/system_status`);
+
+        if (!response.ok) {
+          throw new Error("Couldn't check System Status");
+        }
+
+        const data: SystemStatusResult = await response.json();
+
+        const days = Math.floor(data.uptime_seconds / 86400);
+        const hours = Math.floor((data.uptime_seconds % 86400) / 3600);
+        const minutes = Math.floor((data.uptime_seconds % 3600) / 60);
+
+        data.uptime_string = `${days}d  ${hours}h ${minutes}m`;
+        setSystemStatus(data);
+      } catch {
+        setSystemStatus({
+          cpu_percent: 0,
+          disk_percent: 0,
+          memory_percent: 0,
+          uptime_seconds: 0,
+        });
+      }
+    }
+
+    async function updateCoreStatus() {
+      const isOnline = await checkCore();
+
+      if (isOnline) {
+        await getSystemStatus();
+      } else {
+        setSystemStatus({
+          cpu_percent: 0,
+          disk_percent: 0,
+          memory_percent: 0,
+          uptime_seconds: 0,
+        });
+      }
+    }
+
+    updateCoreStatus();
+
+    const intervalId = setInterval(updateCoreStatus, 5000);
 
     return () => {
       clearInterval(intervalId);
     };
   }, []);
+
+  useEffect(() => {
+    if (!isSending && coreStatus === "online") inputRef.current?.focus();
+  }, [isSending, coreStatus]);
 
   return (
     <main className="app-shell">
@@ -217,13 +271,16 @@ function App() {
                 <div
                   className="response-area"
                   onClick={() => {
-                    document.getElementsByName("textInput")[0].focus();
+                    inputRef.current?.focus();
                   }}
                 >
-                  <p>{ultronResponse}</p>
+                  <p>
+                    {ultronResponse == "" ? "Seja bem vindo." : ultronResponse}
+                  </p>
                 </div>
                 <div className="input-area">
                   <input
+                    ref={inputRef}
                     placeholder="Escreva aqui..."
                     name="textInput"
                     value={textInput}
@@ -265,7 +322,46 @@ function App() {
 
           <InfoCard title="Endpoint" content="/chat" tone={"accent"} />
 
-          <CircularProgressBar value={20} />
+          <InfoCard title="System Status" content="">
+            <div className="progess-bar-container top">
+              <div>
+                <CircularProgressBar
+                  label="CPU Usage"
+                  value={systemStatus.cpu_percent}
+                  size={100}
+                  strokeColor="azure"
+                  circleColor="cadetblue"
+                />
+              </div>
+
+              <div>
+                <CircularProgressBar
+                  label="Disk Usage"
+                  value={systemStatus.disk_percent}
+                  size={100}
+                  strokeColor="deepskyblue"
+                  circleColor="darkslategray"
+                />
+              </div>
+            </div>
+            <div className="progess-bar-container">
+              <div>
+                <CircularProgressBar
+                  label="Memory Usage"
+                  value={systemStatus.memory_percent}
+                  size={100}
+                  strokeColor="darkseagreen"
+                  circleColor="darkolivegreen"
+                />
+              </div>
+            </div>
+          </InfoCard>
+          <div style={{ marginTop: "auto" }}>
+            <InfoCard
+              title="Tempo de Atividade"
+              content={systemStatus.uptime_string}
+            />
+          </div>
         </aside>
       </div>
       <footer className="footer">
