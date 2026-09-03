@@ -6,7 +6,7 @@ client = TestClient(app)
 def test_chat_returns_greeting_for_ola():
     response = client.post(
         "/chat",
-        json={"message": "Olá, Ultorn"},
+        json={"message": "Olá, Ultron"},
     )
 
     assert response.status_code == 200

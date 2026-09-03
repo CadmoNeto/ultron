@@ -11,7 +11,7 @@ type SystemStatusResult = {
   cpu_percent: number;
   memory_percent: number;
   disk_percent: number;
-  uptime_seconds?: number;
+  uptime_seconds: number;
   uptime_string?: string;
 };
 
@@ -123,9 +123,11 @@ function App() {
         }
 
         setCoreStatus("offline");
+        setUltronResponse("");
         return false;
       } catch {
         setCoreStatus("offline");
+        setUltronResponse("");
         return false;
       }
     }
@@ -359,7 +361,11 @@ function App() {
           <div style={{ marginTop: "auto" }}>
             <InfoCard
               title="Tempo de Atividade"
-              content={systemStatus.uptime_string}
+              content={
+                systemStatus.uptime_string
+                  ? systemStatus.uptime_string
+                  : "0d 0h 0m"
+              }
             />
           </div>
         </aside>
