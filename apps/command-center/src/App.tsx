@@ -231,7 +231,7 @@ function App() {
           />
 
           <div style={{ marginTop: "auto" }}>
-            <InfoCard title="" content="v0.0.1 • Local Core" />
+            <InfoCard title="" content="v0.1.0 • Local Core" />
           </div>
         </aside>
         <section className="main-panel panel">
@@ -375,7 +375,7 @@ function App() {
         <span className={`core ${coreTone}`}>
           • {coreStatus.charAt(0).toUpperCase() + coreStatus.slice(1)}
         </span>
-        <span>v0.0.1</span>
+        <span>v0.1.0</span>
       </footer>
     </main>
   );
