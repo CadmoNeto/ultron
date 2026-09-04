@@ -40,11 +40,11 @@ Next milestone: `v0.1 — First functional ULTRON`
 - ✅ Short local Core command through `uv run ultron`
 - ✅ Command Center Core URL configured through environment variables
 - ✅ ULTRON Core deployment on Vercel
+- ✅ First real ULTRON tool
 
 ### Next
 
 - ⏳ First real LLM provider integration
-- ⏳ First real ULTRON tool
 - ⏳ Deploy the Command Center
 - ⏳ Additional Core tests and diagnostics
 

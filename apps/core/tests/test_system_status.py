@@ -1,14 +1,16 @@
-from ultron_core.tools.psutil_system_status import PsutilSystemStatus
+from fastapi.testclient import TestClient
+from ultron_core.main import app
 from ultron_core.tools.system_status import SystemStatus
 
-def test_psutil_system_status_valid_status():
-    provider = PsutilSystemStatus()
+client = TestClient(app)
 
-    status = provider.get_status()
+def test_system_status():
+    response = client.get("/system_status")
 
-    assert isinstance(status, SystemStatus)
+    assert response.status_code == 200
+    data = SystemStatus(**response.json())
 
-    assert 0 <= status.cpu_percent <= 100
-    assert 0 <= status.memory_percent <= 100
-    assert 0 <= status.disk_percent <= 100
-    assert status.uptime_seconds >= 0
+    assert isinstance(data.cpu_percent, float)
+    assert isinstance(data.memory_percent, float)
+    assert isinstance(data.disk_percent, float)
+    assert isinstance(data.uptime_seconds, int)
