@@ -10,7 +10,7 @@ def add_break_line(message: str) -> str:
     else:
         return message
 
-def format_uptime(seconds: int):
+def format_uptime(seconds: int) -> str:
     days = seconds // 86400
     rem_sec = seconds % 86400
 
@@ -35,16 +35,15 @@ def format_uptime(seconds: int):
 async def process_message(message: str, llm: LLM, system_status_provider: SystemStatusProvider) -> str:
     logger.info("Chat processing started.")
     message_aux = message.lower()
-
-    llm_response = await llm.generate(message_aux)
-    logger.info("Chat processing completed.")
-
     message_return = ""
+    process_handled = False
 
     if message_aux.startswith(("olá", "ola")):
         message_return = "Olá, Cadmo."
+        process_handled = True
     elif message_aux.startswith("oi"):
         message_return = "Oi, Cadmo."
+        process_handled = True
 
     
     if ("status" in message_aux) and (("computador" in message_aux) or ("pc" in message_aux)):
@@ -61,6 +60,15 @@ async def process_message(message: str, llm: LLM, system_status_provider: System
             f"Uso de Memória: {system_status.memory_percent}%\n"
             f"Uso de Armazenamento (Disco Principal): {system_status.disk_percent}%\n"
             f"Tempo de Funcionamento: {uptime}")
+
+        process_handled = True
+
+    if not process_handled:
+        llm_response = await llm.generate(message_aux)
+        message_return = add_break_line(message_return)
+        message_return = message_return + llm_response
+
+    logger.info("Chat processing completed.")
 
     if message_return == "":
         message_return = "Não entendi."
