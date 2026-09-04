@@ -62,10 +62,11 @@ async def process_message(message: str, llm: LLM, system_status_provider: System
             f"Tempo de Funcionamento: {uptime}")
 
         process_handled = True
-
     if not process_handled:
         llm_response = await llm.generate(message_aux)
-        message_return = add_break_line(message_return)
+
+        if message_return != "": message_return = add_break_line(message_return)
+
         message_return = message_return + llm_response
 
     logger.info("Chat processing completed.")

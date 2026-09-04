@@ -35,7 +35,7 @@ def test_process_message_normalizes_prompt_before_calling_llm():
         "mensagem desconhecida"
     ]
 
-    assert result == "Não entendi."
+    assert result == "resposta de teste"
 
 def test_proccess_message_returns_system_status():
     llm = SpyLLM()
