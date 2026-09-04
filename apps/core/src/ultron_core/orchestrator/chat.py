@@ -60,7 +60,7 @@ async def process_message(message: str, llm: LLM, system_status_provider: System
             f"Uso de CPU: {system_status.cpu_percent}%\n"
             f"Uso de Memória: {system_status.memory_percent}%\n"
             f"Uso de Armazenamento (Disco Principal): {system_status.disk_percent}%\n"
-            f"Tempo de Funcionamento: {uptime}\n")
+            f"Tempo de Funcionamento: {uptime}")
 
     if message_return == "":
         message_return = "Não entendi."
